@@ -1,8 +1,15 @@
 package com.challenge.lc.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Service;
 
+import com.challenge.lc.exception.ExistingLoanFoundException;
+import com.challenge.lc.exception.LoanNotFoundException;
+import com.challenge.lc.model.Balance;
+import com.challenge.lc.model.BalanceResponse;
 import com.challenge.lc.model.Loan;
+import com.challenge.lc.model.Payment;
 import com.challenge.lc.repository.LoanRepository;
 
 @Service
@@ -14,20 +21,17 @@ public class LoanService {
 		this.loanRepository = loanRepository;
 	}
 
-	public void addLoan(String bankName, String borrowerName, double loanAmount, int years, double interestRate) {
-		Loan loan = new Loan(bankName, borrowerName, loanAmount, years, interestRate);
+	public void addLoan(Loan loan) throws ExistingLoanFoundException {
 		loanRepository.addLoan(loan);
 	}
 
-	public Loan addPayment(String bankName, String borrowerName, double amount, int emiNumber) {
-		Loan loan = loanRepository.getLoan(bankName, borrowerName);
-		// do the calc and save
-		return loan;
+	public void addPayment(Payment payment) throws LoanNotFoundException {
+		loanRepository.addPayment(payment);
 	}
 
-	public Loan getBalance(String bankName, String borrowerName, int emiNumber) {
-		Loan loan = loanRepository.getLoan(bankName, borrowerName);
-		return loan;
+	public BalanceResponse getBalance(Balance balance) throws LoanNotFoundException {
+		BalanceResponse balanceResponse = new BalanceResponse("IDIDI", "Dale", new BigDecimal(1000), 10);
+		return balanceResponse;
 	}
 
 }

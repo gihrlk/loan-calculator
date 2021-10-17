@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Loan {
+public class BalanceResponse {
 
 	@JsonProperty("bankName")
 	String bankName;
@@ -14,21 +14,21 @@ public class Loan {
 	@JsonProperty("borrowerName")
 	String borrowerName;
 
-	@JsonProperty("principalAmount")
-	BigDecimal principalAmount;
+	@JsonProperty("amountPaid")
+	BigDecimal amountPaid;
 
-	@JsonProperty("term")
-	int term;
+	@JsonProperty("remainingEmis")
+	int remainingEmis;
 
-	@JsonProperty("interest")
-	BigDecimal interest;
+	public BalanceResponse() {
 
-	public Loan(String bankName, String borrowerName, BigDecimal principalAmount, int term, BigDecimal interest) {
+	}
+
+	public BalanceResponse(String bankName, String borrowerName, BigDecimal amountPaid, int remainingEmis) {
 		this.bankName = bankName;
 		this.borrowerName = borrowerName;
-		this.principalAmount = principalAmount;
-		this.term = term;
-		this.interest = interest;
+		this.amountPaid = amountPaid;
+		this.remainingEmis = remainingEmis;
 	}
 
 	public String getBankName() {
@@ -47,39 +47,30 @@ public class Loan {
 		this.borrowerName = borrowerName;
 	}
 
-	public BigDecimal getPrincipalAmount() {
-		return principalAmount;
+	public BigDecimal getAmountPaid() {
+		return amountPaid;
 	}
 
-	public void setPrincipalAmount(BigDecimal principalAmount) {
-		this.principalAmount = principalAmount;
+	public void setAmountPaid(BigDecimal amountPaid) {
+		this.amountPaid = amountPaid;
 	}
 
-	public int getTerm() {
-		return term;
+	public int getRemainingEmis() {
+		return remainingEmis;
 	}
 
-	public void setTerm(int term) {
-		this.term = term;
-	}
-
-	public BigDecimal getInterest() {
-		return interest;
-	}
-
-	public void setInterest(BigDecimal interest) {
-		this.interest = interest;
+	public void setRemainingEmis(int remainingEmis) {
+		this.remainingEmis = remainingEmis;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((amountPaid == null) ? 0 : amountPaid.hashCode());
 		result = prime * result + ((bankName == null) ? 0 : bankName.hashCode());
 		result = prime * result + ((borrowerName == null) ? 0 : borrowerName.hashCode());
-		result = prime * result + ((interest == null) ? 0 : interest.hashCode());
-		result = prime * result + ((principalAmount == null) ? 0 : principalAmount.hashCode());
-		result = prime * result + term;
+		result = prime * result + remainingEmis;
 		return result;
 	}
 
@@ -91,7 +82,12 @@ public class Loan {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Loan other = (Loan) obj;
+		BalanceResponse other = (BalanceResponse) obj;
+		if (amountPaid == null) {
+			if (other.amountPaid != null)
+				return false;
+		} else if (!amountPaid.equals(other.amountPaid))
+			return false;
 		if (bankName == null) {
 			if (other.bankName != null)
 				return false;
@@ -102,17 +98,7 @@ public class Loan {
 				return false;
 		} else if (!borrowerName.equals(other.borrowerName))
 			return false;
-		if (interest == null) {
-			if (other.interest != null)
-				return false;
-		} else if (!interest.equals(other.interest))
-			return false;
-		if (principalAmount == null) {
-			if (other.principalAmount != null)
-				return false;
-		} else if (!principalAmount.equals(other.principalAmount))
-			return false;
-		if (term != other.term)
+		if (remainingEmis != other.remainingEmis)
 			return false;
 		return true;
 	}
