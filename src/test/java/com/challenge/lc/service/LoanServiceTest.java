@@ -51,8 +51,8 @@ public class LoanServiceTest {
 
 	@Test
 	void test_checkBalance() throws LoanNotFoundException {
-		Balance balance = new Balance("IDIDII", "Dale", 1);
-		BalanceResponse expected = new BalanceResponse("IDIDI", "Dale", new BigDecimal(1000), 10);
+		Balance balance = new Balance("IDIDI", "Dale", 5);
+		BalanceResponse expected = new BalanceResponse("IDIDI", "Dale", new BigDecimal(1000), 55);
 		BalanceResponse actual = loanService.getBalance(balance);
 		assertTrue(expected.equals(actual));
 	}

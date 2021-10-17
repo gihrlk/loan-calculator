@@ -22,8 +22,12 @@ public class Loan {
 
 	@JsonProperty("interest")
 	BigDecimal interest;
+	
+	public Loan() {
+		
+	}
 
-	public Loan(String bankName, String borrowerName, BigDecimal principalAmount, int term, BigDecimal interest) {
+	public Loan(String bankName, String borrowerName, BigDecimal principalAmount, Integer term, BigDecimal interest) {
 		this.bankName = bankName;
 		this.borrowerName = borrowerName;
 		this.principalAmount = principalAmount;

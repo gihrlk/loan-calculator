@@ -1,6 +1,12 @@
 package com.challenge.lc.command;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.challenge.lc.model.Balance;
+import com.challenge.lc.model.BalanceResponse;
 
 public class BalanceCommand implements Command {
 
@@ -13,7 +19,16 @@ public class BalanceCommand implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println("Balance command executed");
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<BalanceResponse> response = restTemplate.exchange(
+				LOAN_API_ENDPOINT + "balance/" + balance.getBankName() + "/" + balance.getBorrowerName()
+						+ "?emiNumber={emiNumber}",
+				HttpMethod.GET, new HttpEntity<Object>(generateHeaders()), BalanceResponse.class,
+				balance.getEmiNumber());
+
+		BalanceResponse balanceResponse = response.getBody();
+		LOGGER.info("{} {} {} {}", () -> balanceResponse.getBankName(), () -> balanceResponse.getBorrowerName(),
+				() -> balanceResponse.getAmountPaid(), () -> balanceResponse.getRemainingEmis());
 	}
 
 	@Override

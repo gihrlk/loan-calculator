@@ -1,6 +1,7 @@
 package com.challenge.lc.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -64,43 +65,19 @@ public class BalanceResponse {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((amountPaid == null) ? 0 : amountPaid.hashCode());
-		result = prime * result + ((bankName == null) ? 0 : bankName.hashCode());
-		result = prime * result + ((borrowerName == null) ? 0 : borrowerName.hashCode());
-		result = prime * result + remainingEmis;
-		return result;
-	}
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BalanceResponse balanceResponse = (BalanceResponse) o;
+        return Objects.equals(bankName, balanceResponse.bankName) &&
+                Objects.equals(borrowerName, balanceResponse.borrowerName) &&
+                Objects.equals(amountPaid.doubleValue(), balanceResponse.amountPaid.doubleValue()) &&
+                Objects.equals(remainingEmis, balanceResponse.remainingEmis);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BalanceResponse other = (BalanceResponse) obj;
-		if (amountPaid == null) {
-			if (other.amountPaid != null)
-				return false;
-		} else if (!amountPaid.equals(other.amountPaid))
-			return false;
-		if (bankName == null) {
-			if (other.bankName != null)
-				return false;
-		} else if (!bankName.equals(other.bankName))
-			return false;
-		if (borrowerName == null) {
-			if (other.borrowerName != null)
-				return false;
-		} else if (!borrowerName.equals(other.borrowerName))
-			return false;
-		if (remainingEmis != other.remainingEmis)
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(bankName, borrowerName, amountPaid, remainingEmis);
+    }
 
 }

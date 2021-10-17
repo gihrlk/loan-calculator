@@ -1,2 +1,2 @@
-# loan-calculator
-Calculates EMI for a loan
+# Loan Calculator
+

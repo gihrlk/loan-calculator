@@ -3,11 +3,13 @@ package com.challenge.lc.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.challenge.lc.exception.ExistingLoanFoundException;
 import com.challenge.lc.exception.LoanNotFoundException;
+import com.challenge.lc.model.Balance;
 import com.challenge.lc.model.Loan;
 import com.challenge.lc.model.Payment;
 
@@ -15,8 +17,8 @@ import com.challenge.lc.model.Payment;
 public class LoanRepository {
 
 	private List<Loan> loanList = new ArrayList<Loan>();
-	
-	private List<Payment> paymentList = new ArrayList<Payment>();	
+
+	private List<Payment> paymentList = new ArrayList<Payment>();
 
 	public List<Loan> getLoanList() {
 		return loanList;
@@ -34,7 +36,7 @@ public class LoanRepository {
 		this.paymentList = paymentList;
 	}
 
-	public void addLoan(Loan loan) throws ExistingLoanFoundException {
+	public Loan addLoan(Loan loan) throws ExistingLoanFoundException {
 		// Check if the load already exists
 		Loan existingLoan = getLoan(loan.getBankName(), loan.getBorrowerName());
 		if (existingLoan != null) {
@@ -42,16 +44,38 @@ public class LoanRepository {
 		} else {
 			loanList.add(loan);
 		}
+
+		return loan;
 	}
-	
-	public void addPayment(Payment payment) throws LoanNotFoundException {
-		// Check if the load already exists		
+
+	public Payment addPayment(Payment payment) throws LoanNotFoundException {
+		// Check if the load already exists
 		Loan existingLoan = getLoan(payment.getBankName(), payment.getBorrowerName());
 		if (existingLoan == null) {
 			throw new LoanNotFoundException();
 		} else {
 			paymentList.add(payment);
 		}
+
+		return payment;
+	}
+
+	public Loan getLoan(Balance balance) {
+		// Check if the load already exists
+		Loan existingLoan = getLoan(balance.getBankName(), balance.getBorrowerName());
+		if (existingLoan == null) {
+			throw new LoanNotFoundException();
+		}
+
+		return existingLoan;
+	}
+
+	public List<Payment> getPayments(Balance balance) {
+		List<Payment> payments = paymentList.stream()
+				.filter(payment -> payment.getBankName().equalsIgnoreCase(balance.getBankName())
+						&& payment.getBorrowerName().equalsIgnoreCase(balance.getBorrowerName()))
+				.collect(Collectors.toList());
+		return payments;
 	}
 
 	private Loan getLoan(String bankName, String borrowerName) {

@@ -2,6 +2,9 @@ package com.challenge.lc.command;
 
 import java.math.BigDecimal;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.challenge.lc.model.Loan;
 
 public class LoanCommand implements Command {
@@ -16,7 +19,9 @@ public class LoanCommand implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println("Loan command executed");
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.postForEntity(LOAN_API_ENDPOINT + "add", new HttpEntity<Object>(loan, generateHeaders()),
+				Loan.class);
 	}
 
 	@Override

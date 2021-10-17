@@ -2,6 +2,9 @@ package com.challenge.lc.command;
 
 import java.math.BigDecimal;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.challenge.lc.model.Payment;
 
 public class PaymentCommand implements Command {
@@ -15,7 +18,9 @@ public class PaymentCommand implements Command {
 
 	@Override
 	public void execute() {
-		System.out.println("Payment command executed");
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.postForEntity(LOAN_API_ENDPOINT + "payment", new HttpEntity<Object>(payment, generateHeaders()),
+				Payment.class);
 	}
 
 	@Override
