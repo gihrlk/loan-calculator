@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.challenge.lc.exception.ExistingLoanFoundException;
 import com.challenge.lc.exception.LoanNotFoundException;
+import com.challenge.lc.exception.PaymentAmountNotValidException;
 import com.challenge.lc.model.Balance;
 import com.challenge.lc.model.BalanceResponse;
 import com.challenge.lc.model.Loan;
@@ -36,7 +37,7 @@ public class LoanController {
 
 	//@PutMapping("/loan/payment")
 	@RequestMapping(value = "/loan/payment", method = RequestMethod.POST)
-	@ExceptionHandler({ ExistingLoanFoundException.class })
+	@ExceptionHandler({ ExistingLoanFoundException.class, PaymentAmountNotValidException.class })
 	public ResponseEntity<Payment> postPayment(@RequestBody Payment payment) throws ExistingLoanFoundException {
 		return ResponseEntity.ok(loanService.addPayment(payment));
 	}

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.challenge.lc.exception.ExistingLoanFoundException;
 import com.challenge.lc.exception.LoanNotFoundException;
-import com.challenge.lc.model.Balance;
 import com.challenge.lc.model.Loan;
 import com.challenge.lc.model.Payment;
 
@@ -40,7 +39,7 @@ public class LoanRepository {
 		// Check if the load already exists
 		Loan existingLoan = getLoan(loan.getBankName(), loan.getBorrowerName());
 		if (existingLoan != null) {
-			throw new ExistingLoanFoundException();
+			throw new ExistingLoanFoundException("Existing loan found for " + loan.getBorrowerName() + " in " + loan.getBankName() + "bank");
 		} else {
 			loanList.add(loan);
 		}
@@ -52,30 +51,13 @@ public class LoanRepository {
 		// Check if the load already exists
 		Loan existingLoan = getLoan(payment.getBankName(), payment.getBorrowerName());
 		if (existingLoan == null) {
-			throw new LoanNotFoundException();
+			throw new LoanNotFoundException(
+					"Loan not found for " + payment.getBorrowerName() + " in " + payment.getBankName() + "bank");
 		} else {
 			paymentList.add(payment);
 		}
 
 		return payment;
-	}
-
-//	public Loan getLoan(Balance balance) {
-//		// Check if the load already exists
-//		Loan existingLoan = getLoan(balance.getBankName(), balance.getBorrowerName());
-//		if (existingLoan == null) {
-//			throw new LoanNotFoundException();
-//		}
-//
-//		return existingLoan;
-//	}
-
-	public List<Payment> getPayments(String bankName, String borrowerName) {
-		List<Payment> payments = paymentList.stream()
-				.filter(payment -> payment.getBankName().equalsIgnoreCase(bankName)
-						&& payment.getBorrowerName().equalsIgnoreCase(borrowerName))
-				.collect(Collectors.toList());
-		return payments;
 	}
 
 	public Loan getLoan(String bankName, String borrowerName) {
@@ -85,6 +67,12 @@ public class LoanRepository {
 			return optionalLoan.get();
 		}
 		return null;
+	}
+	
+	public List<Payment> getPayments(String bankName, String borrowerName) {
+		List<Payment> payments = paymentList.stream().filter(payment -> payment.getBankName().equalsIgnoreCase(bankName)
+				&& payment.getBorrowerName().equalsIgnoreCase(borrowerName)).collect(Collectors.toList());
+		return payments;
 	}
 
 }

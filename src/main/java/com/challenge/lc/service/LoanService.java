@@ -38,26 +38,38 @@ public class LoanService {
 		// Check the outstanding loan amount
 		// If payment is greater than the outstanding amount, raise an error
 		Loan loan = loanRepository.getLoan(payment.getBankName(), payment.getBorrowerName());
-		BigDecimal paidTotal = getPaidTotal(payment.getBankName(), payment.getBorrowerName(), loan.getEmiAmount(),
-				payment.getEmiNumber());
-		BigDecimal remainingBalance = loan.getTotalAmount().subtract(paidTotal);
-		if (remainingBalance.compareTo(payment.getLumpsumAmount()) < 0) {
-			return loanRepository.addPayment(payment);
+		if (loan != null) {
+			BigDecimal paidTotal = getPaidTotal(payment.getBankName(), payment.getBorrowerName(), loan.getEmiAmount(),
+					payment.getEmiNumber());
+			BigDecimal remainingBalance = loan.getTotalAmount().subtract(paidTotal);
+			if (remainingBalance.compareTo(payment.getLumpsumAmount()) >= 0) {
+				return loanRepository.addPayment(payment);
+			} else {
+				BigDecimal displayOutsandingAmount = remainingBalance.setScale(0, RoundingMode.CEILING);
+				throw new PaymentAmountNotValidException(
+						"Lump sum amount exceeds the remaining loan balance " + displayOutsandingAmount);
+			}
 		} else {
-			throw new PaymentAmountNotValidException();
+			throw new LoanNotFoundException(
+					"Loan not found for " + payment.getBorrowerName() + " in " + payment.getBankName() + "bank");
 		}
 	}
 
 	public BalanceResponse getBalance(Balance balance) throws LoanNotFoundException {
 		Loan loan = loanRepository.getLoan(balance.getBankName(), balance.getBorrowerName());
-		BigDecimal paidTotal = getPaidTotal(balance.getBankName(), balance.getBorrowerName(), loan.getEmiAmount(),
-				balance.getEmiNumber());
-		BigDecimal remainingBalance = loan.getTotalAmount().subtract(paidTotal);
-		int remainingEmis = remainingBalance.divide(loan.getEmiAmount(), 0, RoundingMode.CEILING).intValue();
-		BigDecimal displayPaidTotal = paidTotal.setScale(0, RoundingMode.CEILING);
-		BalanceResponse balanceResponse = new BalanceResponse(balance.getBankName(), balance.getBorrowerName(),
-				displayPaidTotal, remainingEmis);
-		return balanceResponse;
+		if (loan != null) {
+			BigDecimal paidTotal = getPaidTotal(balance.getBankName(), balance.getBorrowerName(), loan.getEmiAmount(),
+					balance.getEmiNumber());
+			BigDecimal remainingBalance = loan.getTotalAmount().subtract(paidTotal);
+			int remainingEmis = remainingBalance.divide(loan.getEmiAmount(), 0, RoundingMode.CEILING).intValue();
+			BigDecimal displayPaidTotal = paidTotal.setScale(0, RoundingMode.CEILING);
+			BalanceResponse balanceResponse = new BalanceResponse(balance.getBankName(), balance.getBorrowerName(),
+					displayPaidTotal, remainingEmis);
+			return balanceResponse;
+		} else {
+			throw new LoanNotFoundException(
+					"Loan not found for " + balance.getBorrowerName() + " in " + balance.getBankName() + "bank");
+		}
 	}
 
 	private BigDecimal getTotalLoan(Loan loan) {
