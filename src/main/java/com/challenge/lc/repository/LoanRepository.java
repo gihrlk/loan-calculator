@@ -60,25 +60,25 @@ public class LoanRepository {
 		return payment;
 	}
 
-	public Loan getLoan(Balance balance) {
-		// Check if the load already exists
-		Loan existingLoan = getLoan(balance.getBankName(), balance.getBorrowerName());
-		if (existingLoan == null) {
-			throw new LoanNotFoundException();
-		}
+//	public Loan getLoan(Balance balance) {
+//		// Check if the load already exists
+//		Loan existingLoan = getLoan(balance.getBankName(), balance.getBorrowerName());
+//		if (existingLoan == null) {
+//			throw new LoanNotFoundException();
+//		}
+//
+//		return existingLoan;
+//	}
 
-		return existingLoan;
-	}
-
-	public List<Payment> getPayments(Balance balance) {
+	public List<Payment> getPayments(String bankName, String borrowerName) {
 		List<Payment> payments = paymentList.stream()
-				.filter(payment -> payment.getBankName().equalsIgnoreCase(balance.getBankName())
-						&& payment.getBorrowerName().equalsIgnoreCase(balance.getBorrowerName()))
+				.filter(payment -> payment.getBankName().equalsIgnoreCase(bankName)
+						&& payment.getBorrowerName().equalsIgnoreCase(borrowerName))
 				.collect(Collectors.toList());
 		return payments;
 	}
 
-	private Loan getLoan(String bankName, String borrowerName) {
+	public Loan getLoan(String bankName, String borrowerName) {
 		Optional<Loan> optionalLoan = loanList.stream().filter(loan -> loan.getBankName().equalsIgnoreCase(bankName)
 				&& loan.getBorrowerName().equalsIgnoreCase(borrowerName)).findFirst();
 		if (optionalLoan.isPresent()) {

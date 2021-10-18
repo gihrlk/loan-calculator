@@ -23,6 +23,12 @@ public class Loan {
 	@JsonProperty("interest")
 	BigDecimal interest;
 	
+	@JsonProperty("emiAmount")
+	BigDecimal emiAmount;
+	
+	@JsonProperty("totalAmount")
+	BigDecimal totalAmount;
+	
 	public Loan() {
 		
 	}
@@ -33,6 +39,16 @@ public class Loan {
 		this.principalAmount = principalAmount;
 		this.term = term;
 		this.interest = interest;
+	}
+	
+	public Loan(String bankName, String borrowerName, BigDecimal principalAmount, Integer term, BigDecimal interest, BigDecimal emiAmount, BigDecimal totalAmount) {
+		this.bankName = bankName;
+		this.borrowerName = borrowerName;
+		this.principalAmount = principalAmount;
+		this.term = term;
+		this.interest = interest;
+		this.emiAmount = emiAmount;
+		this.totalAmount = totalAmount;
 	}
 
 	public String getBankName() {
@@ -75,15 +91,33 @@ public class Loan {
 		this.interest = interest;
 	}
 
+	public BigDecimal getEmiAmount() {
+		return emiAmount;
+	}
+
+	public void setEmiAmount(BigDecimal emiAmount) {
+		this.emiAmount = emiAmount;
+	}
+
+	public BigDecimal getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(BigDecimal totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((bankName == null) ? 0 : bankName.hashCode());
 		result = prime * result + ((borrowerName == null) ? 0 : borrowerName.hashCode());
+		result = prime * result + ((emiAmount == null) ? 0 : emiAmount.hashCode());
 		result = prime * result + ((interest == null) ? 0 : interest.hashCode());
 		result = prime * result + ((principalAmount == null) ? 0 : principalAmount.hashCode());
 		result = prime * result + term;
+		result = prime * result + ((totalAmount == null) ? 0 : totalAmount.hashCode());
 		return result;
 	}
 
@@ -106,6 +140,11 @@ public class Loan {
 				return false;
 		} else if (!borrowerName.equals(other.borrowerName))
 			return false;
+		if (emiAmount == null) {
+			if (other.emiAmount != null)
+				return false;
+		} else if (!emiAmount.equals(other.emiAmount))
+			return false;
 		if (interest == null) {
 			if (other.interest != null)
 				return false;
@@ -117,6 +156,11 @@ public class Loan {
 		} else if (!principalAmount.equals(other.principalAmount))
 			return false;
 		if (term != other.term)
+			return false;
+		if (totalAmount == null) {
+			if (other.totalAmount != null)
+				return false;
+		} else if (!totalAmount.equals(other.totalAmount))
 			return false;
 		return true;
 	}

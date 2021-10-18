@@ -37,7 +37,7 @@ public class LoanController {
 	//@PutMapping("/loan/payment")
 	@RequestMapping(value = "/loan/payment", method = RequestMethod.POST)
 	@ExceptionHandler({ ExistingLoanFoundException.class })
-	public ResponseEntity<Payment> postPayment(@RequestParam Payment payment) throws ExistingLoanFoundException {
+	public ResponseEntity<Payment> postPayment(@RequestBody Payment payment) throws ExistingLoanFoundException {
 		return ResponseEntity.ok(loanService.addPayment(payment));
 	}
 
